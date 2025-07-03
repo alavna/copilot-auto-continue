@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copilot Chat Agent - Auto-Continue Extension</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 0;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .header .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .demo-section {
+            background: #1e1e1e;
+            color: #f0f0f0;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 50px 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .demo-header {
+            color: #4fc3f7;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .command {
+            background: #2d2d2d;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 3px solid #4fc3f7;
+        }
+
+        .command-text {
+            color: #81c784;
+        }
+
+        .command-desc {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .installation {
+            background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .installation h2 {
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .install-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .install-step {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            overflow-x: auto;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            margin: 10px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .countdown-demo {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .countdown-timer {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .main-content {
+                padding: 30px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1>🤖 Copilot Chat Agent</h1>
+            <div class="subtitle">Auto-Continue Extension for GitHub Copilot</div>
+            <div class="tagline">
+                Automatically click "Continue" after 20 seconds. Never interrupt your coding flow again!
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Stats -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number">20s</div>
+                    <div>Auto-Continue Delay</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div>Manual Clicks Needed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div>Seamless Conversations</div>
+                </div>
+            </div>
+
+            <!-- Problem & Solution -->
+            <section style="text-align: center; margin: 60px 0;">
+                <h2 style="color: #333; margin-bottom: 30px; font-size: 2.5rem;">Tired of Clicking "Continue"?</h2>
+                <p style="font-size: 1.2rem; color: #666; max-width: 800px; margin: 0 auto;">
+                    GitHub Copilot Chat often asks you to click "Continue" for longer responses. 
+                    This breaks your flow and interrupts your coding sessions. 
+                    <span class="highlight">Our agent solves this problem!</span>
+                </p>
+            </section>
+
+            <!-- Countdown Demo -->
+            <div class="countdown-demo">
+                <h3>🔄 Auto-Continue in Action</h3>
+                <div class="countdown-timer" id="countdown">20</div>
+                <p>Watch the countdown! This is how long you have to read before auto-continue.</p>
+                <button onclick="startDemo()" style="background: white; color: #ff6b6b; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer;">
+                    ▶️ Start Demo
+                </button>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>20-Second Smart Delay</h3>
+                    <p>Perfect timing - gives you enough time to read responses without being too slow. Fully configurable from 1 second to 2 minutes.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Automatic Continuation</h3>
+                    <p>Never click "Continue" again! The agent automatically handles all continuation prompts while keeping you informed.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Visual Countdown</h3>
+                    <p>See exactly how much time remains before auto-continue activates. Check status anytime with simple commands.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Per-Chat Control</h3>
+                    <p>Enable or disable auto-continue for each conversation independently. Full control when you need it.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Easy Commands</h3>
+                    <p>Simple chat commands to control everything. No complex setup or configuration files to manage.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Safe & Reliable</h3>
+                    <p>Built with GitHub's official Copilot Extensions SDK. Secure request verification and proper error handling.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Demo Commands Section -->
+        <section class="demo-section">
+            <div class="demo-header">💬 Available Commands in Copilot Chat</div>
+            
+            <div class="command">
+                <div class="command-text">/agent-start</div>
+                <div class="command-desc">Activate the agent for automated assistance</div>
+            </div>
+
+            <div class="command">
+                <div class="command-text">/agent-auto-continue</div>
+                <div class="command-desc">Enable 20-second auto-continue for "Continue" prompts</div>
+            </div>
+
+            <div class="command">
+                <div class="command-text">/agent-status</div>
+                <div class="command-desc">Check agent status and see countdown timers</div>
+            </div>
+
+            <div class="command">
+                <div class="command-text">/agent-manual-continue</div>
+                <div class="command-desc">Disable auto-continue and return to manual clicking</div>
+            </div>
+
+            <div class="command">
+                <div class="command-text">/agent-help</div>
+                <div class="command-desc">Show all available commands and features</div>
+            </div>
+        </section>
+
+        <!-- Installation Section -->
+        <section class="installation">
+            <h2>🚀 Get Started in Minutes</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 40px;">
+                Set up your auto-continue agent and start coding without interruptions
+            </p>
+
+            <div class="install-steps">
+                <div class="install-step">
+                    <div class="step-number">1</div>
+                    <h3>Clone & Install</h3>
+                    <div class="code-block">
+git clone &lt;repo-url&gt;
+cd copilot-chat-agent
+npm install
+                    </div>
+                </div>
+
+                <div class="install-step">
+                    <div class="step-number">2</div>
+                    <h3>Quick Setup</h3>
+                    <div class="code-block">
+npm run setup
+npm start
+                    </div>
+                </div>
+
+                <div class="install-step">
+                    <div class="step-number">3</div>
+                    <h3>Use in Copilot Chat</h3>
+                    <div class="code-block">
+/agent-start
+/agent-auto-continue
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 30px; opacity: 0.9;">
+                🔗 For full GitHub integration, you'll need to set up a GitHub App (detailed instructions included)
+            </p>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <h2 style="color: #333; margin-bottom: 30px;">Ready to Eliminate Manual Clicking?</h2>
+            <a href="#" class="cta-button">📥 Download Extension</a>
+            <a href="#" class="cta-button">📖 View Documentation</a>
+            <a href="#" class="cta-button">🐙 GitHub Repository</a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Copilot Chat Agent. Built with ❤️ for developers who hate clicking "Continue".</p>
+            <p style="margin-top: 10px; opacity: 0.7;">
+                Powered by GitHub Copilot Extensions SDK | Node.js | Express
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        let countdownInterval;
+        let currentCount = 20;
+
+        function startDemo() {
+            currentCount = 20;
+            const countdownEl = document.getElementById('countdown');
+            
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                countdownEl.textContent = currentCount;
+                currentCount--;
+                
+                if (currentCount < 0) {
+                    clearInterval(countdownInterval);
+                    countdownEl.textContent = "✅ AUTO-CONTINUE!";
+                    setTimeout(() => {
+                        countdownEl.textContent = "20";
+                        currentCount = 20;
+                    }, 2000);
+                }
+            }, 1000);
+        }
+
+        // Auto-start demo on page load
+        window.addEventListener('load', () => {
+            setTimeout(startDemo, 2000);
+        });
+
+        // Add some smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
